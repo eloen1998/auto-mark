@@ -2,44 +2,50 @@ import type { ExtensionContext } from 'vscode'
 import { Range, commands, window, workspace } from 'vscode'
 
 import { Command } from './command'
-import { replace } from './replace'
+import { replaceMap } from './replace'
 import { StatusBarItem } from './StatusBarItem'
 
 export function activate(content: ExtensionContext) {
   const barItem = new StatusBarItem()
   workspace.onDidChangeTextDocument((event) => {
     const { reason } = event
-    if (reason)
+    if (reason) {
+      // 撤销、回退、粘贴的内容不会处理
       return
+    }
 
-    if (!barItem.status)
+    if (!barItem.status) {
+      // 禁用状态不会处理
       return
+    }
 
     const editor = window.activeTextEditor
-
-    if (!editor)
+    if (!editor) {
       return
+    }
 
     const { document, selection } = editor
     const curPosition = selection.active
+    const lineText = document.lineAt(curPosition.line).text
 
-    const p1 = curPosition.translate(0, -1)
-    const p2 = curPosition.translate(0, 1)
-
-    const inputWord = document.getText(new Range(p1, p2))
-
-    const [c1, c2] = inputWord.split('')
-
-    const result = replace(c1, c2)
-
-    if (result) {
-      editor.edit((editBuilder) => {
-        editBuilder.replace(new Range(curPosition, p2), result)
-      }).then(() => {
-        if (result === '.')
-          commands.executeCommand('editor.action.triggerSuggest')
-      })
+    const curChart = lineText[curPosition.character]
+    const replaceChart = replaceMap[curChart]
+    if (!replaceChart) {
+      return
     }
+
+    const textBeforeCursor = lineText.substring(0, curPosition.character)
+    const isInString = /\B("|')[^"']*$/g.test(textBeforeCursor)
+    if (isInString) {
+      return
+    }
+
+    editor.edit((editBuilder) => {
+      editBuilder.replace(new Range(curPosition, curPosition.translate(0, 1)), replaceChart)
+    }).then(() => {
+      if (replaceChart === '.')
+        commands.executeCommand('editor.action.triggerSuggest')
+    })
   })
 
   content.subscriptions.push(
@@ -54,4 +60,4 @@ export function activate(content: ExtensionContext) {
   )
 }
 
-export function deactivate() {}
+export function deactivate() { }
