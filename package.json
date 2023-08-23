@@ -2,7 +2,7 @@
   "publisher": "eloen",
   "name": "auto-mark",
   "displayName": "Auto Mark",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "packageManager": "pnpm@8.6.0",
   "description": "自动修改错误的符号。",
