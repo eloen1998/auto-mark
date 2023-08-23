@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@8.6.0",
-  "description": "0.0.1",
+  "description": "自动修改错误的符号。",
   "author": "eloen",
   "license": "MIT",
   "homepage": "https://github.com/eloen/auto-mark#readme",
