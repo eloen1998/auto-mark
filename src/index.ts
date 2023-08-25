@@ -30,15 +30,29 @@ export function activate(content: ExtensionContext) {
 
     const curChart = lineText[curPosition.character]
     const replaceChart = replaceMap[curChart]
+    // 不需要替换的不处理
     if (!replaceChart) {
       return
     }
 
     const textBeforeCursor = lineText.substring(0, curPosition.character)
+    // 前面没有内容不处理
+    if (!textBeforeCursor) {
+      return
+    }
+
     const isInString = /\B("|')[^"']*$/g.test(textBeforeCursor)
+    // 在双引号、单引号之间的不处理
     if (isInString) {
       return
     }
+
+    // 前面是中文或者中文符号，不处理
+    const isChinese = /[\u4e00-\u9fa5]/.test(textBeforeCursor.at(-1)!)
+    if (isChinese) {
+      return
+    }
+    
 
     editor.edit((editBuilder) => {
       editBuilder.replace(new Range(curPosition, curPosition.translate(0, 1)), replaceChart)
