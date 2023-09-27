@@ -41,11 +41,11 @@ export function activate(content: ExtensionContext) {
       return
     }
 
-    const isInString = /\B("|')[^"']*$/g.test(textBeforeCursor)
-    // 在双引号、单引号之间的不处理
-    if (isInString) {
-      return
-    }
+    // const isInString = /\B("|')[^"']*$/g.test(textBeforeCursor)
+    // // 在双引号、单引号之间的不处理
+    // if (isInString) {
+    //   return
+    // }
 
     // 前面是中文或者中文符号，不处理
     const isChinese = /[\u4e00-\u9fa5]/.test(textBeforeCursor.at(-1)!)
