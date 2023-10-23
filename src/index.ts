@@ -41,6 +41,11 @@ export function activate(content: ExtensionContext) {
       return
     }
 
+    // 在双反斜杠注释之后 不处理
+    if (/\/\//.test(textBeforeCursor)) {
+      return
+    }
+
     // const isInString = /\B("|')[^"']*$/g.test(textBeforeCursor)
     // // 在双引号、单引号之间的不处理
     // if (isInString) {

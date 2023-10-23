@@ -18,6 +18,10 @@
 （可能只符合少部分小伙伴的操作习惯）
 
 
+
+Todo: 选中了文字之后，输入引号，自动给括起来。 如果选中前后有引号，  替换引号
+
+
 ## 📄 License
 
 [MIT License](https://github.com/eloen1998/auto-mark/blob/main/LICENSE) © 2023 eloen
